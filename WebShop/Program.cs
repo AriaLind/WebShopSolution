@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using WebShop.DataAccess;
 using WebShop.Interfaces;
 using WebShop.Notifications;
-using WebShop.Repositories;
 using WebShop.UnitOfWork;
 
 var builder = WebApplication.CreateBuilder(args);

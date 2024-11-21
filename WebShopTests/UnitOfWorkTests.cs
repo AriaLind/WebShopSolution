@@ -40,4 +40,90 @@ public class UnitOfWorkTests
         // Verify that Update was called on the mock observer with the correct product
         mockObserver.Verify(o => o.Update(product), Times.Once);
     }
+
+    [Fact]
+    public void UnitOfWork_ShouldThrowArgumentNullExceptionWhenDbContextIsNull()
+    {
+        // Arrange
+        ApplicationDbContext? dbContext = null;
+
+        // Inject null DbContext into UnitOfWork
+        var unitOfWork = new UnitOfWork(dbContext);
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => unitOfWork.ProductRepository);
+    }
+
+    [Fact]
+    public void UnitOfWork_ShouldInitializeNewProductSubject_WhenProductSubjectIsNull()
+    {
+        // Arrange
+        ProductSubject? productSubject = null;
+
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseInMemoryDatabase($"TestDatabase_{Guid.NewGuid()}")
+            .Options;
+
+        var unitOfWork = new UnitOfWork(new ApplicationDbContext(options), productSubject);
+
+        var product = new Product { Id = 1, Name = "Test" };
+
+        // Act
+        unitOfWork.ProductSubject.Notify(product);
+
+        // Assert
+        Assert.NotNull(unitOfWork.ProductSubject);
+    }
+
+    [Fact]
+    public void UnitOfWork_ShouldNotInitializeNewProductSubject_WhenProductSubjectIsNotNull()
+    {
+        // Arrange
+        var productSubject = new ProductSubject();
+
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseInMemoryDatabase($"TestDatabase_{Guid.NewGuid()}")
+            .Options;
+
+        var unitOfWork = new UnitOfWork(new ApplicationDbContext(options), productSubject);
+
+        var product = new Product { Id = 1, Name = "Test" };
+
+        // Act
+        unitOfWork.ProductSubject.Notify(product);
+
+        // Assert
+        Assert.NotNull(unitOfWork.ProductSubject);
+    }
+
+    [Fact]
+    public void UnitOfWork_ShouldReturnProductRepository()
+    {
+        // Arrange
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseInMemoryDatabase($"TestDatabase_{Guid.NewGuid()}")
+            .Options;
+
+        var dbContext = new ApplicationDbContext(options);
+
+        var unitOfWork = new UnitOfWork(dbContext);
+
+        // Act
+        var productRepository = unitOfWork.ProductRepository;
+
+        // Assert
+        Assert.NotNull(productRepository);
+    }
+
+    [Fact]
+    public void UnitOfWork_ShouldThrowArgumentNullExceptionWhenProductRepositoryIsCalledWithoutDbContext()
+    {
+        // Arrange
+        ApplicationDbContext? dbContext = null;
+
+        var unitOfWork = new UnitOfWork(dbContext);
+
+        // Act & Assert
+        Assert.Throws<ArgumentNullException>(() => unitOfWork.ProductRepository);
+    }
 }

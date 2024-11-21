@@ -33,7 +33,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
         _applicationDbContext = applicationDbContext;
     }
 
-    public UnitOfWork(ApplicationDbContext? applicationDbContext, ProductSubject productSubject)
+    public UnitOfWork(ApplicationDbContext? applicationDbContext, ProductSubject? productSubject)
     {
         _applicationDbContext = applicationDbContext;
         _productSubject = productSubject;

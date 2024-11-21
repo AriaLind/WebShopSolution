@@ -45,9 +45,7 @@ public class ProductRepository(ApplicationDbContext? applicationDbContext) : IPr
             return;
         }
 
-        applicationDbContext.Products.Add(entity);
-
-        await applicationDbContext.SaveChangesAsync();
+        await applicationDbContext.Products.AddAsync(entity);
     }
 
     public async Task UpdateAsync(Product? entity)
@@ -70,8 +68,6 @@ public class ProductRepository(ApplicationDbContext? applicationDbContext) : IPr
         }
 
         existingProduct.Name = entity.Name;
-
-        await applicationDbContext.SaveChangesAsync();
     }
 
 
@@ -90,7 +86,5 @@ public class ProductRepository(ApplicationDbContext? applicationDbContext) : IPr
         }
 
         applicationDbContext.Products.Remove(product);
-
-        await applicationDbContext.SaveChangesAsync();
     }
 }
