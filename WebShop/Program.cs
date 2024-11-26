@@ -1,8 +1,10 @@
+using DataAccess;
+using DataAccess.Interfaces;
+using DataAccess.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
-using WebShop.DataAccess;
 using WebShop.Interfaces;
 using WebShop.Notifications;
-using WebShop.UnitOfWork;
+using INotificationObserver = WebShop.Interfaces.INotificationObserver;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,11 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseInMemoryDatabase("FakeDb");
+});
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 builder.Services.AddControllers();

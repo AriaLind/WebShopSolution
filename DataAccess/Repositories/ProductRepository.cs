@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using WebShop.DataAccess;
-using WebShop.Interfaces;
+﻿using DataAccess.Entities;
+using DataAccess.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
-namespace WebShop.Repositories;
+namespace DataAccess.Repositories;
 
 public class ProductRepository(ApplicationDbContext? applicationDbContext) : IProductRepository
 {

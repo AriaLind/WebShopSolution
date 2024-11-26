@@ -1,4 +1,5 @@
-﻿using WebShop.Interfaces;
+﻿using DataAccess.Entities;
+using WebShop.Interfaces;
 
 namespace WebShop.Notifications;
 

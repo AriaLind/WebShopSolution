@@ -1,7 +1,6 @@
-﻿using DataAccess.Entities;
-using WebShop.Interfaces;
+﻿using DataAccess.Interfaces;
 
-namespace WebShop.Notifications;
+namespace DataAccess.Entities;
 
 // Subject som håller reda på observatörer och notifierar dem
 public class ProductSubject

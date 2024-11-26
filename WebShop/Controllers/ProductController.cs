@@ -1,6 +1,10 @@
+
+
+using DataAccess;
+using DataAccess.Entities;
+using DataAccess.Interfaces;
+using DataAccess.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
-using WebShop.DataAccess;
-using WebShop.Interfaces;
 
 namespace WebShop.Controllers;
 
@@ -11,7 +15,7 @@ public class ProductController : ControllerBase
     private IUnitOfWork _unitOfWork;
     public ProductController(IUnitOfWork unitOfWork, ApplicationDbContext applicationDbContext)
     {
-        _unitOfWork = new UnitOfWork.UnitOfWork(applicationDbContext);
+        _unitOfWork = new UnitOfWork(applicationDbContext);
     }
 
     // Endpoint för att hämta alla produkter

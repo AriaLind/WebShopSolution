@@ -1,15 +1,25 @@
+using DataAccess;
+using DataAccess.Entities;
+using DataAccess.Interfaces;
+using DataAccess.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
 using Moq;
-using WebShop;
-using WebShop.DataAccess;
-using WebShop.Interfaces;
-using WebShop.Notifications;
-using WebShop.UnitOfWork;
 
-namespace WebShopTests;
+namespace DataAccessTests;
 
 public class UnitOfWorkTests
 {
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IProductRepository> _productRepositoryMock;
+
+    public UnitOfWorkTests()
+    {
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _productRepositoryMock = new Mock<IProductRepository>();
+
+        _unitOfWorkMock.Setup(uow => uow.ProductRepository).Returns(_productRepositoryMock.Object);
+    }
+
     [Fact]
     public void NotifyProductAdded_CallsObserverUpdate()
     {

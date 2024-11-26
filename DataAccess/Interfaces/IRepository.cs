@@ -1,4 +1,6 @@
-﻿namespace WebShop.Interfaces;
+﻿using DataAccess.Entities;
+
+namespace DataAccess.Interfaces;
 
 public interface IRepository<TId, TEntity> where TId : notnull
 {

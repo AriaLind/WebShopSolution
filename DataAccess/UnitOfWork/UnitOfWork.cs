@@ -1,9 +1,8 @@
-﻿using WebShop.DataAccess;
-using WebShop.Interfaces;
-using WebShop.Notifications;
-using WebShop.Repositories;
+﻿using DataAccess.Entities;
+using DataAccess.Interfaces;
+using DataAccess.Repositories;
 
-namespace WebShop.UnitOfWork;
+namespace DataAccess.UnitOfWork;
 
 public class UnitOfWork : IUnitOfWork, IDisposable
 {
@@ -21,7 +20,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
             {
                 _productSubject = new ProductSubject();
 
-                _productSubject.Attach(new EmailNotification());
+                //_productSubject.Attach(new EmailNotification());
             }
 
             return _productSubject;
