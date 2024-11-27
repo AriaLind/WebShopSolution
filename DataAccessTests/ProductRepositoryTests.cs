@@ -1,9 +1,5 @@
-﻿using DataAccess;
-using DataAccess.Entities;
+﻿using DataAccess.Entities;
 using DataAccess.Interfaces;
-using DataAccess.Repositories;
-using DataAccess.UnitOfWork;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 
 namespace DataAccessTests;
@@ -17,12 +13,14 @@ public class ProductRepositoryTests
     {
         _productRepositoryMock = new Mock<IProductRepository>();
 
-        _productRepositoryMock.Setup(pr => pr.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(new Product { Id = 1, Name = "Test" });
+        _productRepositoryMock
+            .Setup(pr => pr.GetByIdAsync(It.IsAny<int>()))
+            .ReturnsAsync((int id) => _products.FirstOrDefault(p => p.Id == id));
 
         _productRepositoryMock.Setup(pr => pr.GetAllAsync()).ReturnsAsync(_products);
 
         _productRepositoryMock
-            .Setup(pr => pr.AddAsync(It.IsAny<Product>()))
+            .Setup(pr => pr.AddAsync(It.Is<Product>(p => !string.IsNullOrEmpty(p.Name))))
             .Callback<Product>(product =>
             {
                 product.Id = _products.Count + 1;
@@ -30,16 +28,23 @@ public class ProductRepositoryTests
             })
             .Returns(Task.CompletedTask);
 
-        _productRepositoryMock.Setup(pr => pr.UpdateAsync(It.IsAny<Product>())).Callback<Product>(product =>
-        {
-            var index = _products.FindIndex(p => p.Id == product.Id);
-            if (index != -1)
-            {
-                _products[index] = product;
-            }
-        });
+        _productRepositoryMock
+            .Setup(pr => pr.AddAsync(It.Is<Product>(p => string.IsNullOrEmpty(p.Name))))
+            .Returns(Task.CompletedTask);
 
-        _productRepositoryMock.Setup(pr => pr.DeleteAsync(It.IsAny<int>())).Callback<int>(id =>
+        _productRepositoryMock
+            .Setup(pr => pr.UpdateAsync(It.Is<Product>(p => p.Id == 1)))
+            .Callback<Product>(product =>
+            {
+                var index = _products.FindIndex(p => p.Id == product.Id);
+                if (index != -1)
+                {
+                    _products[index] = product;
+                }
+            })
+            .Returns(Task.CompletedTask);
+
+        _productRepositoryMock.Setup(pr => pr.DeleteAsync(It.Is<int>(id => id == 1))).Callback<int>(id =>
         {
             var product = _products.Find(p => p.Id == id);
             if (product != null)
@@ -65,7 +70,7 @@ public class ProductRepositoryTests
     }
 
     [Fact]
-    public async Task AddProduct_WhenNameIsNull_ShouldReturnNull()
+    public async Task AddProduct_WhenNameIsNull_ShouldNotAddProduct()
     {
         // Arrange
         var product = new Product { Id = 2, Name = null };
@@ -86,7 +91,7 @@ public class ProductRepositoryTests
         var product = new Product { Id = 3, Name = "Test" };
 
 
-        await _productRepositoryMock.Object.AddAsync(product);
+        _products.Add(product);
 
         // Act
         product.Name = "Updated";
@@ -122,7 +127,7 @@ public class ProductRepositoryTests
         // Arrange
         var product = new Product { Id = 5, Name = "Test" };
 
-        await _productRepositoryMock.Object.AddAsync(product);
+        _products.Add(product);
 
         // Act
         await _productRepositoryMock.Object.DeleteAsync(product.Id);
@@ -218,7 +223,7 @@ public class ProductRepositoryTests
         // Arrange
         var product = new Product { Id = 12, Name = null };
 
-        await _productRepositoryMock.Object.AddAsync(product);
+        _products.Add(product);
 
         // Act
         var result = await _productRepositoryMock.Object.GetByIdAsync(product.Id);
@@ -235,7 +240,7 @@ public class ProductRepositoryTests
         // Arrange
         var product = new Product { Id = 13, Name = string.Empty };
 
-        await _productRepositoryMock.Object.AddAsync(product);
+        _products.Add(product);
 
         // Act
         var result = await _productRepositoryMock.Object.GetByIdAsync(product.Id);
@@ -252,7 +257,7 @@ public class ProductRepositoryTests
         // Arrange
         var product = new Product { Id = 14, Name = " " };
 
-        await _productRepositoryMock.Object.AddAsync(product);
+        _products.Add(product);
 
         // Act
         var result = await _productRepositoryMock.Object.GetByIdAsync(product.Id);

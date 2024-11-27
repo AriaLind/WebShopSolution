@@ -1,10 +1,7 @@
-
-
 using DataAccess;
 using DataAccess.Entities;
-using DataAccess.Interfaces;
-using DataAccess.UnitOfWork;
 using Microsoft.AspNetCore.Mvc;
+using WebShop.Interfaces;
 
 namespace WebShop.Controllers;
 

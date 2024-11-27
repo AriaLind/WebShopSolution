@@ -1,7 +1,6 @@
 using DataAccess;
-using DataAccess.Interfaces;
-using DataAccess.UnitOfWork;
 using Microsoft.EntityFrameworkCore;
+using WebShop;
 using WebShop.Interfaces;
 using WebShop.Notifications;
 using INotificationObserver = WebShop.Interfaces.INotificationObserver;

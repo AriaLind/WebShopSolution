@@ -1,6 +1,7 @@
 ﻿using DataAccess.Entities;
+using DataAccess.Interfaces;
 
-namespace DataAccess.Interfaces;
+namespace WebShop.Interfaces;
 
 // Gränssnitt för Unit of Work
 public interface IUnitOfWork

@@ -1,8 +1,11 @@
-﻿using DataAccess.Entities;
+﻿using DataAccess;
+using DataAccess.Entities;
 using DataAccess.Interfaces;
 using DataAccess.Repositories;
+using WebShop.Interfaces;
+using WebShop.Notifications;
 
-namespace DataAccess.UnitOfWork;
+namespace WebShop;
 
 public class UnitOfWork : IUnitOfWork, IDisposable
 {
@@ -20,7 +23,7 @@ public class UnitOfWork : IUnitOfWork, IDisposable
             {
                 _productSubject = new ProductSubject();
 
-                //_productSubject.Attach(new EmailNotification());
+                _productSubject.Attach(new EmailNotification());
             }
 
             return _productSubject;
@@ -49,18 +52,6 @@ public class UnitOfWork : IUnitOfWork, IDisposable
             throw new ArgumentNullException(nameof(_applicationDbContext));
         }
     }
-
-    //Konstruktor används för tillfället av Observer pattern
-    //public UnitOfWork(ProductSubject productSubject = null)
-    //{
-    //    Products = null;
-
-    //    // Om inget ProductSubject injiceras, skapa ett nytt
-    //    _productSubject = productSubject ?? new ProductSubject();
-
-    //    // Registrera standardobservatörer
-    //    _productSubject.Attach(new EmailNotification());
-    //}
 
     public void NotifyProductAdded(Product product)
     {
